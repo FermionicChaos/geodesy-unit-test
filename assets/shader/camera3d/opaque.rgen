@@ -259,18 +259,19 @@ void main() {
 					Ray.Direction = normalize(Light.Source[i].Direction);
 					Ray.Hit = 0;
 
+					// ! Disabled for Raytracing debugging
 					// Trace shadow ray to check for occlusion
-					traceRayEXT(
-						TLAS,
-						gl_RayFlagsOpaqueEXT | gl_RayFlagsTerminateOnFirstHitEXT, // Terminate on first hit for shadows
-						0xFF,
-						0, 0, 0,
-						Ray.Origin,
-						0.001,                    // Min distance
-						Ray.Direction,
-						1000000.0,    // Max distance (just before light)
-						0                         // Ray payload location
-					);
+					// traceRayEXT(
+					// 	TLAS,
+					// 	gl_RayFlagsOpaqueEXT | gl_RayFlagsTerminateOnFirstHitEXT,
+					// 	0xFF,
+					// 	0, 0, 0,
+					// 	Ray.Origin,
+					// 	0.0,
+					// 	Ray.Direction,
+					// 	LightDistance,
+					// 	0
+					// );
 
 					if (Ray.Hit == 1) continue; // If hit, skip lighting calculation
 
@@ -312,17 +313,17 @@ void main() {
 
 					// ! Disabled for Raytracing debugging
 					// Trace shadow ray to check for occlusion
-					traceRayEXT(
-						TLAS,
-						gl_RayFlagsOpaqueEXT | gl_RayFlagsTerminateOnFirstHitEXT,
-						0xFF,
-						0, 0, 0,
-						Ray.Origin,
-						0.0,
-						Ray.Direction,
-						LightDistance,
-						0
-					);
+					// traceRayEXT(
+					// 	TLAS,
+					// 	gl_RayFlagsOpaqueEXT | gl_RayFlagsTerminateOnFirstHitEXT,
+					// 	0xFF,
+					// 	0, 0, 0,
+					// 	Ray.Origin,
+					// 	0.0,
+					// 	Ray.Direction,
+					// 	LightDistance,
+					// 	0
+					// );
 
 					// If light is obstructed, skip lighting calculation
 					if (Ray.Hit == 1) continue;
