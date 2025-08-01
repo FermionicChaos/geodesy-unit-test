@@ -6,6 +6,8 @@
 // Includes engine built in object primitives.
 #include <geodesy/bltn.h>
 
+#include <geodesy-unit-test/unit_test.h>
+
 using namespace geodesy;
 using namespace bltn;
 using namespace obj;
