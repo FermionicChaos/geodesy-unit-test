@@ -19,6 +19,7 @@ namespace geodesy::bltn {
 		void run() override;
 
 		void math_test();
+		void create_worlds();
 
 	};
 

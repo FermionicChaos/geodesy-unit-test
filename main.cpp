@@ -12,15 +12,10 @@ using namespace geodesy;
 using namespace bltn;
 using namespace obj;
 
-// #if ((defined(_WIN32) || defined(_WIN64)) && !defined(NDEBUG))
-// #pragma comment(linker, "/SUBSYSTEM:WINDOWS")
-// #define main wWinMain
-// #endif
-
-// #pragma comment( linker, "/subsystem:"windows" /entry:"mainCRTStartup"" ) 
-
 // Using entry point for app.
 int main(int aCmdArgCount, char* aCmdArgList[]) {
+
+	std::cout << geodesy::runtime::object::rttiid << std::endl;
 
 	// Print System Information
 	std::cout << "System: \t";
