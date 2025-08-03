@@ -145,11 +145,12 @@ layout(set = 0, binding = 14) uniform LightUBO {
 } Light;
 // Geometry Buffer Data
 layout(set = 1, binding = 0, rgba32f) uniform image2D OutputColor;
-layout(set = 1, binding = 1, rgba32f) uniform image2D PixelColor;
-layout(set = 1, binding = 2, rgba32f) uniform image2D PixelPosition;
-layout(set = 1, binding = 3, rgba32f) uniform image2D PixelNormal;
-layout(set = 1, binding = 4, rgba32f) uniform image2D PixelSS;
-layout(set = 1, binding = 5, rgba32f) uniform image2D PixelORM;
+layout(set = 1, binding = 1) uniform sampler2D PixelColor;
+layout(set = 1, binding = 2) uniform sampler2D PixelPosition;
+layout(set = 1, binding = 3) uniform sampler2D PixelNormal;
+layout(set = 1, binding = 4) uniform sampler2D PixelSS;
+layout(set = 1, binding = 5) uniform sampler2D PixelORM;
+layout(set = 1, binding = 6) uniform sampler2D PixelEmissive;
 // Camera Data
 layout (set = 2, binding = 0) uniform SubjectUBO {
 	vec3 Position;
@@ -212,23 +213,18 @@ void main() {
 	// Get Index per ray.
 	vec3 FinalColor = vec3(0.0, 0.0, 0.0);
 	ivec2 RayIndex = ivec2(gl_LaunchIDEXT.xy);
-	ivec2 Resolution = imageSize(PixelColor);
+	ivec2 Resolution = ivec2(gl_LaunchSizeEXT.xy);
+	vec2 UV = vec2(RayIndex) / vec2(Resolution);
 
 	// Load G-buffer data
-	vec4 Albedo = imageLoad(PixelColor, RayIndex);
-	vec3 WorldPosition = imageLoad(PixelPosition, RayIndex).xyz;
-	vec3 WorldNormal = imageLoad(PixelNormal, RayIndex).xyz;
-	float Specular = imageLoad(PixelSS, RayIndex).r;
-	float Shininess = imageLoad(PixelSS, RayIndex).g;
-	float AmbientOcclusion = imageLoad(PixelORM, RayIndex).r;
-	float Roughness = imageLoad(PixelORM, RayIndex).g;
-	float Metallic = imageLoad(PixelORM, RayIndex).b;
-
-	// Skip lighting calculation for pixels with no geometry (alpha = 0)
-	if (Albedo.a == 0.0) {
-		imageStore(OutputColor, RayIndex, vec4(0.0, 0.0, 0.0, 0.0));
-		return;
-	}
+	vec4 Albedo = texture(PixelColor, UV);
+	vec3 WorldPosition = texture(PixelPosition, UV).xyz;
+	vec3 WorldNormal = texture(PixelNormal, UV).xyz;
+	float Specular = texture(PixelSS, UV).r;
+	float Shininess = texture(PixelSS, UV).g;
+	float AmbientOcclusion = texture(PixelORM, UV).r;
+	float Roughness = texture(PixelORM, UV).g;
+	float Metallic = texture(PixelORM, UV).b;
 
 	// View direction of the camera.
 	vec3 ViewDir = normalize(Subject.Position - WorldPosition);
@@ -360,4 +356,5 @@ void main() {
 
 	// Write the final color per pixel to the output color image.
 	imageStore(OutputColor, RayIndex, vec4(FinalColor, 1.0));
+	// imageStore(OutputColor, RayIndex, Albedo); // Store original albedo for debugging
 }

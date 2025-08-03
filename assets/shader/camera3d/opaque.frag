@@ -151,6 +151,7 @@ layout (location = 2) out vec4 PixelNormal;
 layout (location = 3) out vec4 PixelSS;
 layout (location = 4) out vec4 PixelARM;
 layout (location = 5) out vec4 PixelEmissive;
+layout (location = 6) out vec4 PixelTranslucencyMask;
 
 vec2 bisection_parallax(vec2 aUV, mat3 aTBN) {
 
@@ -239,6 +240,8 @@ material_property unpack(vec2 aUV) {
 		// Material Opacity
 		MaterialProperty.Opacity = Material.Opacity;
 	}
+
+	MaterialProperty.Opacity *= texture(MaterialColor, aUV).a; // Apply alpha from color texture.
 
 	// Ignore Normal, and Height Map.
 
@@ -361,13 +364,16 @@ void main() {
 	// Determine World Space Position of the pixel. Maybe modify later to do based on interpolated surface normal?
 	PixelPosition = vec4(WorldPosition, 1.0) + PixelNormal*texture(MaterialHeightMap, aUV).r;
 
+	// Color Pass through for opaque objects.
+	PixelColor = vec4(MP.Albedo, MP.Opacity);//*0.01 + PixelARM*0.9;
+
 	// Move over material color.
 	if (Material.Transparency == 0) {
-		// Color Pass through for opaque objects.
-		PixelColor = vec4(MP.Albedo, texture(MaterialColor, aUV).a * MP.Opacity);//*0.01 + PixelARM*0.9;
+		// Pixel is to use standard lighting and shadowing.
+		PixelTranslucencyMask = vec4(0.0f, 0.0f, 0.0f, 1.0f); // Opaque
 	}
 	else {
-		// Fill Color with white for render doc inspection.
-		PixelColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);
+		// Pixel is to use full ray tracing.
+		PixelTranslucencyMask = vec4(1.0f, 1.0f, 1.0f, 1.0f); // Translucent
 	}
 }
