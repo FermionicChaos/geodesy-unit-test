@@ -342,31 +342,6 @@ void main() {
 	// Load Material Propertie for fragment.
 	material_property MP = unpack(aUV);
 
-	// Merge Ambient Occlusion, Metallic, and Roughness into a single vec4.
-	PixelARM = vec4(MP.AmbientOcclusion, MP.Roughness, MP.Metallic, 1.0);
-
-	// Merge Specular and Shininess into a single vec4.
-	PixelSS = vec4(MP.Specular.r, MP.Specular.g, MP.Specular.b, MP.Shininess);
-
-	// How much the pixel glows.
-	PixelEmissive = vec4(MP.Emissive, 1.0);
-
-	// Get Texture Normal, z should be 1.0 if directly normal to surface.
-	if (Material.NormalTextureIndex >= 0) {
-		vec3 TextureNormal = normalize(2.0*texture(MaterialNormalMap, aUV).rgb - 1.0);
-		vec3 CombinedNormal = n*Material.NormalVertexWeight + TBN*TextureNormal*Material.NormalTextureWeight;
-		PixelNormal = vec4(normalize(CombinedNormal), 1.0);
-	}
-	else {
-		PixelNormal = vec4(n, 1.0);
-	}
-
-	// Determine World Space Position of the pixel. Maybe modify later to do based on interpolated surface normal?
-	PixelPosition = vec4(WorldPosition, 1.0) + PixelNormal*texture(MaterialHeightMap, aUV).r;
-
-	// Color Pass through for opaque objects.
-	PixelColor = vec4(MP.Albedo, MP.Opacity);//*0.01 + PixelARM*0.9;
-
 	// Move over material color.
 	if (Material.Transparency == 0) {
 		// Pixel is to use standard lighting and shadowing.
@@ -376,4 +351,30 @@ void main() {
 		// Pixel is to use full ray tracing.
 		PixelTranslucencyMask = vec4(1.0f, 1.0f, 1.0f, 1.0f); // Translucent
 	}
+
+	// How much the pixel glows.
+	PixelEmissive = vec4(MP.Emissive, MP.Opacity);
+
+	// Merge Ambient Occlusion, Metallic, and Roughness into a single vec4.
+	PixelARM = vec4(MP.AmbientOcclusion, MP.Roughness, MP.Metallic, MP.Opacity);
+
+	// TODO: Figure out how alpha blend this.
+	// Merge Specular and Shininess into a single vec4.
+	PixelSS = vec4(MP.Specular.r, MP.Specular.g, MP.Specular.b, MP.Shininess);
+
+	// Get Texture Normal, z should be 1.0 if directly normal to surface.
+	if (Material.NormalTextureIndex >= 0) {
+		vec3 TextureNormal = normalize(2.0*texture(MaterialNormalMap, aUV).rgb - 1.0);
+		vec3 CombinedNormal = n*Material.NormalVertexWeight + TBN*TextureNormal*Material.NormalTextureWeight;
+		PixelNormal = vec4(normalize(CombinedNormal), MP.Opacity);
+	}
+	else {
+		PixelNormal = vec4(n, MP.Opacity);
+	}
+
+	// Determine World Space Position of the pixel. Maybe modify later to do based on interpolated surface normal?
+	PixelPosition = vec4(WorldPosition + PixelNormal.xyz*texture(MaterialHeightMap, aUV).r, MP.Opacity);
+
+	// Color Pass through for opaque objects.
+	PixelColor = vec4(MP.Albedo, MP.Opacity);//*0.01 + PixelARM*0.9;
 }
