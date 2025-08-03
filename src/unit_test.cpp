@@ -561,10 +561,14 @@ namespace geodesy::bltn {
 		// ToyCar.Scale 							= { 1.0f, 1.0f, 1.0f };
 		// Scene3DCreationList.push_back(&ToyCar);
 
-		this->Stage = std::vector<std::shared_ptr<runtime::stage>>(2);
+		stage::creator Scene3D;
+		Scene3D.Name 						= "Scene3D";
+		Scene3D.ObjectCreationList 			= Scene3DCreationList;
+
+		this->Stage = std::vector<std::shared_ptr<runtime::stage>>(2);		
 
 		// Create Scene3D.
-		this->Stage[0] = app::create<stage>(DeviceContext, "3D Rendering Testing", Scene3DCreationList);
+		this->Stage[0] = this->build_stage(DeviceContext, &Scene3D);
 
 		stage::light_uniform_data* LightBuffer = (stage::light_uniform_data*)this->Stage[0]->LightUniformBuffer->Ptr;
 		LightBuffer->Source[0] = gfx::model::light(1.0f, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 2.0f});
@@ -601,8 +605,12 @@ namespace geodesy::bltn {
 		SubjectWindowCreator.Subject 		= std::dynamic_pointer_cast<runtime::subject>(Camera3D);
 		CanvasCreationList.push_back(&SubjectWindowCreator);
 
+		stage::creator Canvas;
+		Canvas.Name 						= "Canvas";
+		Canvas.ObjectCreationList 			= CanvasCreationList;
+
 		// Create Windowing Stage.
-		this->Stage[1] = app::create<stage>(DeviceContext, "Window Testing", CanvasCreationList);
+		this->Stage[1] = this->build_stage(DeviceContext, &Canvas);
 
 		// Create System Window.
 		Window = std::dynamic_pointer_cast<obj::system_window>(this->Stage[1]->Object[0]);
