@@ -363,7 +363,14 @@ void main() {
 	PixelSS = vec4(MP.Specular.r, MP.Specular.g, MP.Specular.b, MP.Shininess);
 
 	// Get Texture Normal, z should be 1.0 if directly normal to surface.
-	PixelNormal = vec4(WorldNormal, MP.Opacity);
+	if (Material.NormalTextureIndex >= 0) {
+		vec3 TextureNormal = normalize(2.0*texture(MaterialNormalMap, aUV).rgb - 1.0);
+		vec3 CombinedNormal = n*Material.NormalVertexWeight + TBN*TextureNormal*Material.NormalTextureWeight;
+		PixelNormal = vec4(normalize(CombinedNormal), MP.Opacity);
+	}
+	else {
+		PixelNormal = vec4(n, MP.Opacity);
+	}
 
 	// Determine World Space Position of the pixel. Maybe modify later to do based on interpolated surface normal?
 	PixelPosition = vec4(WorldPosition + PixelNormal.xyz*texture(MaterialHeightMap, aUV).r, MP.Opacity);
