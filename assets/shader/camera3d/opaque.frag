@@ -333,7 +333,8 @@ void main() {
 	// Generate new bitangent vector based on the new tangent and normal vectors.
 	b = cross(n, t);
 
-	// Construct the TBN matrix to transform from world space to surface tangent space.
+	// Construct the TBN matrix to transform FROM tangent space TO world space
+	// Columns are: [Tangent, Bitangent, Normal]
 	mat3 TBN = mat3(t, b, n);
 
 	// Calculate aUV coordinates after applying the height map.
@@ -360,15 +361,28 @@ void main() {
 
 	// TODO: Figure out how alpha blend this.
 	// Merge Specular and Shininess into a single vec4.
-	PixelSS = vec4(MP.Specular.r, MP.Specular.g, MP.Specular.b, MP.Shininess);
+	PixelSS = vec4(MP.Specular, MP.Shininess);
+
+	vec3 FinalNormal = n;
+	if (Material.NormalTextureIndex >= 0) {
+		// Convert from [0,1] to [-1,1] range
+		vec3 TextureNormal = (texture(MaterialNormalMap, aUV).rgb*2.0) - 1.0;
+
+		// Calculate the world space normal from the texture normal.
+		vec3 WorldSpaceTextureNormal = normalize(TBN*TextureNormal);
+
+		// DEBUG: Use to check if normal map is vaguely aligned with vertex normal.
+		// FinalNormal = dot(n, WorldSpaceTextureNormal)*vec3(1.0, 1.0, 1.0);
+		// Blend vertex normal and normal map based on weights
+		FinalNormal = normalize(n*Material.NormalVertexWeight + WorldSpaceTextureNormal*Material.NormalTextureWeight);
+	}
 
 	// Encode normal vector from [-1,1] range to [0,1] range for storage
 	// Formula: encoded = (normal + 1.0) * 0.5
-	vec3 EncodedNormal = (n + vec3(1.0)) * 0.5;
-	PixelNormal = vec4(EncodedNormal, MP.Opacity);
+	PixelNormal = vec4((FinalNormal + vec3(1.0)) * 0.5, MP.Opacity);
 
 	// Determine World Space Position of the pixel. Maybe modify later to do based on interpolated surface normal?
-	PixelPosition = vec4(WorldPosition + n*texture(MaterialHeightMap, aUV).r, MP.Opacity);
+	PixelPosition = vec4(WorldPosition + FinalNormal*texture(MaterialHeightMap, aUV).r, MP.Opacity);
 
 	// Color Pass through for opaque objects.
 	PixelColor = vec4(MP.Albedo, MP.Opacity);//*0.01 + PixelNormal*0.9;
