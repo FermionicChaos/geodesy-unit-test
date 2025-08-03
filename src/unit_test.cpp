@@ -572,14 +572,14 @@ namespace geodesy::bltn {
 
 		stage::light_uniform_data* LightBuffer = (stage::light_uniform_data*)this->Stage[0]->LightUniformBuffer->Ptr;
 		LightBuffer->Source[0] = gfx::model::light(1.0f, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 2.0f});
-		LightBuffer->Source[1] = gfx::model::light(3.0f, {1.0f, 0.0f, 0.0f}, {2.0f, 0.0f, 2.0f});
-		LightBuffer->Source[2] = gfx::model::light(1.0f, {0.0f, 1.0f, 0.0f}, {0.0f, 2.0f, 2.0f});
-		LightBuffer->Source[3] = gfx::model::light(2.0f, {0.0f, 0.0f, 1.0f}, {2.0f, 2.0f, 2.0f});
-		LightBuffer->Source[4] = gfx::model::light(6.0f, {1.0f, 1.0f, 0.0f}, {-2.0f, 0.0f, 2.0f});
-		LightBuffer->Source[5] = gfx::model::light(4.0f, {1.0f, 0.0f, 1.0f}, {-2.0f, -2.0f, 2.0f});
-		LightBuffer->Source[6] = gfx::model::light(10.0f, {0.0f, 1.0f, 1.0f}, {-2.0f, -5.0f, 2.0f});
-		LightBuffer->Source[7] = gfx::model::light(4.0f, {1.0f, 1.0f, 1.0f}, {-5.0f, -5.0f, 2.0f});
-		LightBuffer->Count = 8;
+		LightBuffer->Source[1] = gfx::model::light(1.0f, {1.0f, 0.0f, 0.0f}, {5.0f, -2.0f, 2.0f});
+		LightBuffer->Source[2] = gfx::model::light(1.0f, {0.0f, 1.0f, 0.0f}, {-5.0f, -2.0f, 2.0f});
+		LightBuffer->Source[3] = gfx::model::light(1.0f, {0.0f, 0.0f, 1.0f}, {0.0f, 5.0f, 2.0f});
+		// LightBuffer->Source[4] = gfx::model::light(6.0f, {1.0f, 1.0f, 0.0f}, {-2.0f, 0.0f, 2.0f});
+		// LightBuffer->Source[5] = gfx::model::light(4.0f, {1.0f, 0.0f, 1.0f}, {-2.0f, -2.0f, 2.0f});
+		// LightBuffer->Source[6] = gfx::model::light(10.0f, {0.0f, 1.0f, 1.0f}, {-2.0f, -5.0f, 2.0f});
+		// LightBuffer->Source[7] = gfx::model::light(4.0f, {1.0f, 1.0f, 1.0f}, {-5.0f, -5.0f, 2.0f});
+		LightBuffer->Count = 4;
 
 		// Get Camera3D from Stage 0.
 		std::shared_ptr<runtime::subject> Camera3D = std::dynamic_pointer_cast<runtime::subject>(this->Stage[0]->Object[0]);

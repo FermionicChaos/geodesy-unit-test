@@ -362,19 +362,14 @@ void main() {
 	// Merge Specular and Shininess into a single vec4.
 	PixelSS = vec4(MP.Specular.r, MP.Specular.g, MP.Specular.b, MP.Shininess);
 
-	// Get Texture Normal, z should be 1.0 if directly normal to surface.
-	if (Material.NormalTextureIndex >= 0) {
-		vec3 TextureNormal = normalize(2.0*texture(MaterialNormalMap, aUV).rgb - 1.0);
-		vec3 CombinedNormal = n*Material.NormalVertexWeight + TBN*TextureNormal*Material.NormalTextureWeight;
-		PixelNormal = vec4(normalize(CombinedNormal), MP.Opacity);
-	}
-	else {
-		PixelNormal = vec4(n, MP.Opacity);
-	}
+	// Encode normal vector from [-1,1] range to [0,1] range for storage
+	// Formula: encoded = (normal + 1.0) * 0.5
+	vec3 EncodedNormal = (n + vec3(1.0)) * 0.5;
+	PixelNormal = vec4(EncodedNormal, MP.Opacity);
 
 	// Determine World Space Position of the pixel. Maybe modify later to do based on interpolated surface normal?
-	PixelPosition = vec4(WorldPosition + PixelNormal.xyz*texture(MaterialHeightMap, aUV).r, MP.Opacity);
+	PixelPosition = vec4(WorldPosition + n*texture(MaterialHeightMap, aUV).r, MP.Opacity);
 
 	// Color Pass through for opaque objects.
-	PixelColor = vec4(MP.Albedo, MP.Opacity);//*0.01 + PixelARM*0.9;
+	PixelColor = vec4(MP.Albedo, MP.Opacity);//*0.01 + PixelNormal*0.9;
 }

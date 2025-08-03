@@ -223,9 +223,34 @@ vec3 lighting_and_shadows(
 	vec3 LightContribution = vec3(0.0);
 	switch (aLight.Type) {
 	case AMBIENT:
+		// Ambient light affects all surfaces equally, modulated by AO
+		LightContribution = aAlbedo.rgb * aAmbientOcclusion * aLight.Color * aLight.Intensity;
 		break;
-	case DIRECTIONAL:
-
+	case DIRECTIONAL: {
+			// Directional light uses the light's direction, not position
+			vec3 LightDirection = normalize(-aLight.Direction); // Negate to get direction TO light
+			
+			// Check if surface faces the light (back-face culling for lighting)
+			float NdotL = dot(aPixelNormal, LightDirection);
+			if (NdotL <= 0.0) break; // Surface facing away from light
+			
+			// No attenuation for directional lights (sun, etc.)
+			float Attenuation = aLight.Intensity;
+			
+			// Calculate diffuse term (Lambertian)
+			vec3 Diffuse = aAlbedo.rgb * NdotL;
+			
+			// Calculate specular term using PBR
+			vec3 Specular = vec3(rs(LightDirection, aPixelNormal, aViewDirection, aRoughness, aMetallic));
+			
+			// Combine diffuse and specular based on metallic workflow
+			vec3 F0 = mix(vec3(0.04), aAlbedo.rgb, aMetallic);
+			vec3 HalfVector = normalize(LightDirection + aViewDirection);
+			vec3 kS = vec3(fresnel_schlick(max(dot(HalfVector, aViewDirection), 0.0), F0.r));
+			vec3 kD = (vec3(1.0) - kS) * (1.0 - aMetallic);
+			
+			LightContribution = (kD * Diffuse + Specular) * aLight.Color * Attenuation;
+		}
 		break;
 	case POINT: 
 	case SPOT:
@@ -239,7 +264,7 @@ vec3 lighting_and_shadows(
 
 			// Check if surface faces the light (back-face culling for lighting)
 			float NdotL = dot(aPixelNormal, LightDirection);
-			if (NdotL <= 0.0) break;
+			if (NdotL <= 0.0) break; // Surface facing away from light
 
 			// Directional light is treated as a ray with infinite distance. Ray tracing should check for intersection with geometry.
 			// If no intersection, the pixel is illuminated by the light source.
@@ -276,10 +301,11 @@ vec3 lighting_and_shadows(
 
 			// Combine diffuse and specular based on metallic workflow
 			vec3 F0 = mix(vec3(0.04), aAlbedo.rgb, aMetallic); // Base reflectance
-			vec3 kS = vec3(fresnel_schlick(max(dot(normalize(LightDirection + aViewDirection), aViewDirection), 0.0), F0.r));
+			vec3 HalfVector = normalize(LightDirection + aViewDirection);
+			vec3 kS = vec3(fresnel_schlick(max(dot(HalfVector, aViewDirection), 0.0), F0.r));
 			vec3 kD = (vec3(1.0) - kS) * (1.0 - aMetallic); // Metallic surfaces have no diffuse
 
-			LightContribution = (kD * Diffuse + Specular) * aLight.Color * Attenuation;
+			LightContribution = (kD*Diffuse + kS*Specular) * aLight.Color * Attenuation;
 		}
 		break;
 	default:
@@ -299,7 +325,10 @@ void main() {
 	// Load G-buffer data
 	vec4 Albedo = texture(PixelColor, UV);
 	vec3 WorldPosition = texture(PixelPosition, UV).xyz;
-	vec3 WorldNormal = texture(PixelNormal, UV).xyz;
+	// Decode normal vector from [0,1] range back to [-1,1] range
+	// Formula: normal = (encoded * 2.0) - 1.0
+	vec3 EncodedNormal = texture(PixelNormal, UV).xyz;
+	vec3 WorldNormal = normalize((EncodedNormal * 2.0) - vec3(1.0));
 	float Specular = texture(PixelSS, UV).r;
 	float Shininess = texture(PixelSS, UV).g;
 	float AmbientOcclusion = texture(PixelORM, UV).r;
