@@ -192,6 +192,11 @@ float rs(vec3 aL, vec3 aN, vec3 aV, float aRoughness, float aMetallic) {
 	float NdotL = max(dot(aN, aL), 0.001);
 	float F0 = mix(0.04, 1.0, aMetallic);
 
+	// Check if surface faces the light before calculating specular
+	if (NdotL < 0.0) {
+		return 0.0; // No specular contribution for back-facing surfaces
+	}
+
 	// Load cook torrance terms.
 	float D = normal_distribution(dot(aN, h), aRoughness);
 	float G = geometric_attenuation(HdotN, VdotH, NdotV, NdotL);
@@ -225,6 +230,9 @@ vec3 lighting_and_shadows(
 			float NdotL = dot(aPixelNormal, LightDirection);
 			if (NdotL <= 0.0) break; // Surface facing away from light
 
+			// Calculate the half vector for specular calculations
+			vec3 HalfVector = normalize(LightDirection + aViewDirection);
+
 			// Directional light is treated as a ray with infinite distance. Ray tracing should check for intersection with geometry.
 			// If no intersection, the pixel is illuminated by the light source.
 			// Ray.Origin = WorldPosition + WorldNormal * 0.001;
@@ -255,12 +263,11 @@ vec3 lighting_and_shadows(
 			// Calculate diffuse term (Lambertian)
 			vec3 Diffuse = aAlbedo.rgb * NdotL;
 
-			// Calculate specular term using PBR
+			// Calculate specular term using PBR (only after confirming surface faces light)
 			vec3 Specular = vec3(rs(LightDirection, aPixelNormal, aViewDirection, aRoughness, aMetallic));
 
 			// Combine diffuse and specular based on metallic workflow
 			vec3 F0 = mix(vec3(0.04), aAlbedo.rgb, aMetallic); // Base reflectance
-			vec3 HalfVector = normalize(LightDirection + aViewDirection);
 			vec3 kS = vec3(fresnel_schlick(max(dot(HalfVector, aViewDirection), 0.0), F0.r));
 			vec3 kD = (vec3(1.0) - kS) * (1.0 - aMetallic); // Metallic surfaces have no diffuse
 
@@ -280,6 +287,9 @@ vec3 lighting_and_shadows(
 			// Check if surface faces the light (back-face culling for lighting)
 			float NdotL = dot(aPixelNormal, LightDirection);
 			if (NdotL <= 0.0) break; // Surface facing away from light
+
+			// Calculate the half vector for specular calculations
+			vec3 HalfVector = normalize(LightDirection + aViewDirection);
 
 			// Directional light is treated as a ray with infinite distance. Ray tracing should check for intersection with geometry.
 			// If no intersection, the pixel is illuminated by the light source.
@@ -311,12 +321,11 @@ vec3 lighting_and_shadows(
 			// Calculate diffuse term (Lambertian)
 			vec3 Diffuse = aAlbedo.rgb * NdotL;
 
-			// Calculate specular term using PBR
+			// Calculate specular term using PBR (only after confirming surface faces light)
 			vec3 Specular = vec3(rs(LightDirection, aPixelNormal, aViewDirection, aRoughness, aMetallic));
 
 			// Combine diffuse and specular based on metallic workflow
 			vec3 F0 = mix(vec3(0.04), aAlbedo.rgb, aMetallic); // Base reflectance
-			vec3 HalfVector = normalize(LightDirection + aViewDirection);
 			vec3 kS = vec3(fresnel_schlick(max(dot(HalfVector, aViewDirection), 0.0), F0.r));
 			vec3 kD = (vec3(1.0) - kS) * (1.0 - aMetallic); // Metallic surfaces have no diffuse
 
