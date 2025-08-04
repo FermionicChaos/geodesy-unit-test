@@ -614,8 +614,8 @@ namespace geodesy::bltn {
 		SystemWindowCreator.FrameCount 		= 3;
 		SystemWindowCreator.FrameRate 		= 60.0f;
 		SystemWindowCreator.Display 		= Engine->PrimaryDisplay;
-		SystemWindowCreator.PixelFormat 	= image::format::A2B10G10R10_UNORM_PACK32;
-		SystemWindowCreator.ColorSpace 		= obj::system_window::swapchain::colorspace::HDR10_ST2084;
+		// SystemWindowCreator.PixelFormat 	= image::format::A2B10G10R10_UNORM_PACK32;
+		// SystemWindowCreator.ColorSpace 		= obj::system_window::swapchain::colorspace::HDR10_ST2084;
 		CanvasCreationList.push_back(&SystemWindowCreator);
 
 		// Use subject window to share camera3d renderings.
