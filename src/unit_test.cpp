@@ -586,20 +586,20 @@ namespace geodesy::bltn {
 
 		// Point light.
 		LightBuffer->Source[2].Type 			= gfx::model::light::type::POINT;
-		LightBuffer->Source[2].Intensity 		= 1.0f;
-		LightBuffer->Source[2].Color 			= { 1.0f, 0.0f, 0.0f };
+		LightBuffer->Source[2].Intensity 		= 10.0f;
+		LightBuffer->Source[2].Color 			= { 1.0f, 1.0f, 0.0f };
 		LightBuffer->Source[2].Position 		= { -5.0f, -2.0f, 3.0f };
 
 		// Point Light.
 		LightBuffer->Source[3].Type 			= gfx::model::light::type::POINT;
-		LightBuffer->Source[3].Intensity 		= 1.0f;
-		LightBuffer->Source[3].Color 			= { 0.0f, 1.0f, 0.0f };
+		LightBuffer->Source[3].Intensity 		= 10.0f;
+		LightBuffer->Source[3].Color 			= { 0.0f, 1.0f, 1.0f };
 		LightBuffer->Source[3].Position 		= { 5.0f, -2.0f, 3.0f };
 
 		// Point Light.
 		LightBuffer->Source[4].Type 			= gfx::model::light::type::POINT;
-		LightBuffer->Source[4].Intensity 		= 1.0f;
-		LightBuffer->Source[4].Color 			= { 0.0f, 0.0f, 1.0f };
+		LightBuffer->Source[4].Intensity 		= 10.0f;
+		LightBuffer->Source[4].Color 			= { 1.0f, 0.0f, 1.0f };
 		LightBuffer->Source[4].Position 		= { 0.0f, 5.0f, 3.0f };
 
 		// Get Camera3D from Stage 0.
@@ -614,6 +614,8 @@ namespace geodesy::bltn {
 		SystemWindowCreator.FrameCount 		= 3;
 		SystemWindowCreator.FrameRate 		= 60.0f;
 		SystemWindowCreator.Display 		= Engine->PrimaryDisplay;
+		SystemWindowCreator.PixelFormat 	= image::format::A2B10G10R10_UNORM_PACK32;
+		SystemWindowCreator.ColorSpace 		= obj::system_window::swapchain::colorspace::HDR10_ST2084;
 		CanvasCreationList.push_back(&SystemWindowCreator);
 
 		// Use subject window to share camera3d renderings.
