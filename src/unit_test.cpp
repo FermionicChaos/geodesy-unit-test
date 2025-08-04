@@ -571,15 +571,36 @@ namespace geodesy::bltn {
 		this->Stage[0] = this->build_stage(DeviceContext, &Scene3D);
 
 		stage::light_uniform_data* LightBuffer = (stage::light_uniform_data*)this->Stage[0]->LightUniformBuffer->Ptr;
-		LightBuffer->Source[0] = gfx::model::light(1.0f, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 2.0f});
-		LightBuffer->Source[1] = gfx::model::light(1.0f, {1.0f, 0.0f, 0.0f}, {5.0f, -2.0f, 2.0f});
-		LightBuffer->Source[2] = gfx::model::light(1.0f, {0.0f, 1.0f, 0.0f}, {-5.0f, -2.0f, 2.0f});
-		LightBuffer->Source[3] = gfx::model::light(1.0f, {0.0f, 0.0f, 1.0f}, {0.0f, 5.0f, 2.0f});
-		// LightBuffer->Source[4] = gfx::model::light(6.0f, {1.0f, 1.0f, 0.0f}, {-2.0f, 0.0f, 2.0f});
-		// LightBuffer->Source[5] = gfx::model::light(4.0f, {1.0f, 0.0f, 1.0f}, {-2.0f, -2.0f, 2.0f});
-		// LightBuffer->Source[6] = gfx::model::light(10.0f, {0.0f, 1.0f, 1.0f}, {-2.0f, -5.0f, 2.0f});
-		// LightBuffer->Source[7] = gfx::model::light(4.0f, {1.0f, 1.0f, 1.0f}, {-5.0f, -5.0f, 2.0f});
-		LightBuffer->Count = 4;
+		LightBuffer->Count = 5;
+		
+		// Ambient light.
+		LightBuffer->Source[0].Type 			= gfx::model::light::type::AMBIENT;
+		LightBuffer->Source[0].Intensity 		= 0.1f;
+		LightBuffer->Source[0].Color 			= { 1.0f, 1.0f, 1.0f };
+
+		// Direction light.
+		LightBuffer->Source[1].Type 			= gfx::model::light::type::DIRECTIONAL;
+		LightBuffer->Source[1].Intensity 		= 1.0f;
+		LightBuffer->Source[1].Color 			= { 1.0f, 1.0f, 1.0f };
+		LightBuffer->Source[1].Direction 		= { -1.0f, -1.0f, -1.0f };
+
+		// Point light.
+		LightBuffer->Source[2].Type 			= gfx::model::light::type::POINT;
+		LightBuffer->Source[2].Intensity 		= 1.0f;
+		LightBuffer->Source[2].Color 			= { 1.0f, 0.0f, 0.0f };
+		LightBuffer->Source[2].Position 		= { -5.0f, -2.0f, 3.0f };
+
+		// Point Light.
+		LightBuffer->Source[3].Type 			= gfx::model::light::type::POINT;
+		LightBuffer->Source[3].Intensity 		= 1.0f;
+		LightBuffer->Source[3].Color 			= { 0.0f, 1.0f, 0.0f };
+		LightBuffer->Source[3].Position 		= { 5.0f, -2.0f, 3.0f };
+
+		// Point Light.
+		LightBuffer->Source[4].Type 			= gfx::model::light::type::POINT;
+		LightBuffer->Source[4].Intensity 		= 1.0f;
+		LightBuffer->Source[4].Color 			= { 0.0f, 0.0f, 1.0f };
+		LightBuffer->Source[4].Position 		= { 0.0f, 5.0f, 3.0f };
 
 		// Get Camera3D from Stage 0.
 		std::shared_ptr<runtime::subject> Camera3D = std::dynamic_pointer_cast<runtime::subject>(this->Stage[0]->Object[0]);
