@@ -211,15 +211,6 @@ vec3 lighting_and_shadows(
 	float aRoughness,
 	float aMetallic
 ) {
-	// CRITICAL: Initialize ray payload before ANY traceRayEXT calls
-	Ray.Origin = vec3(0.0);
-	Ray.Direction = vec3(0.0);
-	Ray.Hit = 0;
-	Ray.HitInstanceID = 0;  // Initialize to 0, miss shader will set to -1
-	Ray.HitLocation = vec3(0.0);
-	Ray.UV = vec2(0.0);
-	Ray.MaterialIndex = 0;
-
 	vec3 LightContribution = vec3(0.0);
 	switch (aLight.Type) {
 	case AMBIENT:
@@ -227,29 +218,53 @@ vec3 lighting_and_shadows(
 		LightContribution = aAlbedo.rgb * aAmbientOcclusion * aLight.Color * aLight.Intensity;
 		break;
 	case DIRECTIONAL: {
-			// Directional light uses the light's direction, not position
-			vec3 LightDirection = normalize(-aLight.Direction); // Negate to get direction TO light
-			
+			// Light Direction Vector
+			vec3 LightDirection = normalize(-aLight.Direction);
+
 			// Check if surface faces the light (back-face culling for lighting)
 			float NdotL = dot(aPixelNormal, LightDirection);
 			if (NdotL <= 0.0) break; // Surface facing away from light
-			
-			// No attenuation for directional lights (sun, etc.)
+
+			// Directional light is treated as a ray with infinite distance. Ray tracing should check for intersection with geometry.
+			// If no intersection, the pixel is illuminated by the light source.
+			// Ray.Origin = WorldPosition + WorldNormal * 0.001;
+			// Ray.Direction = normalize(Light.Source[i].Direction);
+			// Ray.Hit = 0;
+
+			// ! Disabled for Raytracing debugging
+			// Trace shadow ray to check for occlusion
+			// traceRayEXT(
+			// 	TLAS,
+			// 	gl_RayFlagsOpaqueEXT | gl_RayFlagsTerminateOnFirstHitEXT,
+			// 	0xFF,
+			// 	0, 0, 0,
+			// 	Ray.Origin,
+			// 	0.0,
+			// 	Ray.Direction,
+			// 	LightDistance,
+			// 	0
+			// );
+
+			// If light is obstructed, skip lighting calculation
+			// if (Ray.Hit == 1) break; // If hit, skip lighting calculation
+
+			// Calculate light attenuation (linear falloff for better visuals)
+			// Use 1/r instead of 1/r² for more gradual, artistic falloff
 			float Attenuation = aLight.Intensity;
-			
+
 			// Calculate diffuse term (Lambertian)
 			vec3 Diffuse = aAlbedo.rgb * NdotL;
-			
+
 			// Calculate specular term using PBR
 			vec3 Specular = vec3(rs(LightDirection, aPixelNormal, aViewDirection, aRoughness, aMetallic));
-			
+
 			// Combine diffuse and specular based on metallic workflow
-			vec3 F0 = mix(vec3(0.04), aAlbedo.rgb, aMetallic);
+			vec3 F0 = mix(vec3(0.04), aAlbedo.rgb, aMetallic); // Base reflectance
 			vec3 HalfVector = normalize(LightDirection + aViewDirection);
 			vec3 kS = vec3(fresnel_schlick(max(dot(HalfVector, aViewDirection), 0.0), F0.r));
-			vec3 kD = (vec3(1.0) - kS) * (1.0 - aMetallic);
-			
-			LightContribution = (kD * Diffuse + Specular) * aLight.Color * Attenuation;
+			vec3 kD = (vec3(1.0) - kS) * (1.0 - aMetallic); // Metallic surfaces have no diffuse
+
+			LightContribution = (kD*Diffuse + kS*Specular) * aLight.Color * Attenuation;
 		}
 		break;
 	case POINT: 
@@ -316,6 +331,15 @@ vec3 lighting_and_shadows(
 }
 
 void main() {
+	// CRITICAL: Initialize ray payload before ANY traceRayEXT calls
+	Ray.Origin = vec3(0.0);
+	Ray.Direction = vec3(0.0);
+	Ray.Hit = 0;
+	Ray.HitInstanceID = 0;  // Initialize to 0, miss shader will set to -1
+	Ray.HitLocation = vec3(0.0);
+	Ray.UV = vec2(0.0);
+	Ray.MaterialIndex = 0;
+
 	// Get Index per ray.
 	vec3 FinalColor = vec3(0.0, 0.0, 0.0);
 	ivec2 RayIndex = ivec2(gl_LaunchIDEXT.xy);
@@ -335,7 +359,7 @@ void main() {
 	float Roughness = texture(PixelORM, UV).g;
 	float Metallic = texture(PixelORM, UV).b;
 	// float Emissive = texture(PixelEmissive, UV).r;
-	float TranslucencyMask = texture(PixelTranslucencyMask, UV).r;
+	float TranslucencyMask = texture(PixelTranslucencyMask, UV).r*0.0f; // Disable translucency for now
 
 	// View direction of the camera.
 	vec3 ViewDir = normalize(Subject.Position - WorldPosition);
@@ -347,23 +371,22 @@ void main() {
 	for (int i = 0; i < Light.Count; i++) {
 		// TODO: Implement later.
 		// Check Translucency Mask
-		// if (TranslucencyMask == 0.0) {
-		// 	// Use Ray Tracing for basic lighting and shadows.
-		// 	FinalColor += lighting_and_shadows(Light.Source[i], Albedo);
-		// }
-		// else {
-		// 	// Use Full Ray Tracing for Translucent Materials
-		// }
-		FinalColor += lighting_and_shadows(
-			Light.Source[i], 
-			Albedo, 
-			WorldPosition,
-			WorldNormal, 
-			ViewDir,
-			AmbientOcclusion,
-			Roughness,
-			Metallic
-		);
+		if (TranslucencyMask == 0.0) {
+			// Use Ray Tracing for basic lighting and shadows.
+			FinalColor += lighting_and_shadows(
+				Light.Source[i], 
+				Albedo, 
+				WorldPosition,
+				WorldNormal, 
+				ViewDir,
+				AmbientOcclusion,
+				Roughness,
+				Metallic
+			);
+		}
+		else {
+			// Use Full Ray Tracing for Translucent Materials
+		}
 	}
 
 	// Write the final color per pixel to the output color image.

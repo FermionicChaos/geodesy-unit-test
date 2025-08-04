@@ -153,68 +153,51 @@ layout (location = 4) out vec4 PixelARM;
 layout (location = 5) out vec4 PixelEmissive;
 layout (location = 6) out vec4 PixelTranslucencyMask;
 
+// -----------------------------------------------------------------------------
+//  Parallax mapping by binary search (bisection)
+//
+//  • Works with any height map where 0 = surface, 1 = highest point.
+//  • Uses Material.HeightScale as maximum depth into the surface.
+//  • Iteration count is Material.HeightStepCount (6-10 is plenty).
+// -----------------------------------------------------------------------------
 vec2 bisection_parallax(vec2 aUV, mat3 aTBN) {
+	/* 1) View vector in tangent space -------------------------------------- */
+	vec3 viewWS = normalize(Subject.Position - WorldPosition);
+	vec3 viewTS = transpose(aTBN) * viewWS;
 
-	// ITBN takes any vector from world space and converts it to tangent space.
-	mat3 ITBN = transpose(aTBN);
+	/* Guard against grazing angles: no parallax if surface is edge-on */
+	float vz = max(viewTS.z, 0.05);        // avoid division blow-ups
 
-	// Converts the view direction from world space to tangent space.
-	vec3 InvertedViewDir = ITBN * normalize(Subject.Position - WorldPosition);
+	/* 2) Maximum UV displacement along view ray --------------------------- */
+	vec2 parallaxDir  = viewTS.xy / vz;               // direction in TS
+	vec2 uvOffsetMax  = parallaxDir * Material.HeightScale;
 
-	// This determines the maximum aUV offset that can be applied. while still possibly
-	// containing the correct aUV coordinate that can possibly intersect the view dir
-	// with the height map.
-	float UVMaxMag = Material.HeightScale * length(InvertedViewDir.xy) / InvertedViewDir.z;
+	/* 3) Initialise search interval --------------------------------------- */
+	vec2  uvNear  = aUV;                 // depth 0   (surface)
+	vec2  uvFar   = aUV + uvOffsetMax;   // depth 1   (max depth)
+	float dNear   = 0.0;
+	float dFar    = 1.0;
 
-	// Calculate the view direction along the surface in tangent space, then
-	// transforms back to world space.
-	vec3 UVMaxDir = aTBN * vec3(InvertedViewDir.xy, 0.0);
+	/* 4) Binary search for first depth crossing --------------------------- */
+	for (int i = 0; i < Material.HeightStepCount; ++i) {
+		vec2  uvMid = mix(uvNear, uvFar, 0.5);
+		float dMid  = 0.5 * (dNear + dFar);
+		float hMid  = texture(MaterialHeightMap, uvMid).r;
 
-	// Initialize the start and end points of the search
-	vec2 UVStart = aUV;
-	vec2 UVEnd = UVMaxDir.xy * UVMaxMag + aUV;
-
-	// Sample the height at the midpoint
-	float hStart = texture(MaterialHeightMap, UVStart).r;
-	float hEnd = texture(MaterialHeightMap, UVEnd).r;
-
-	// The y values are going to be the values to determine where an inversion 
-	// has occurred. It is the height map height minus expected interception point
-	// along view dir.
-	float yStart = hStart - (length(UVStart - aUV) / UVMaxMag) * Material.HeightScale;
-	float yEnd = hEnd - (length(UVEnd - aUV) / UVMaxMag) * Material.HeightScale;
-
-	// Perform the bisection search here. We can modify later
-	// to start biased towards the end and move inwards. That
-	// way it finds the first intersection farthest to UVMax.
-	vec2 UVMid;
-	for (int i = 0; i < Material.HeightStepCount; i++) {
-
-		// Compute the midpoint between UVStart and UVEnd
-		UVMid = (UVStart + UVEnd) * 0.5;
-		float hMid = texture(MaterialHeightMap, UVMid).r;
-		float yMid = hMid - (length(UVMid - aUV) / UVMaxMag) * Material.HeightScale;
-
-		// Early exit condition if height threshold is met.
-		if (abs(hMid - (length(UVMid - aUV) / UVMaxMag) * Material.HeightScale) < 0.01) {
-			break;
+		if (hMid > dMid) {
+			uvNear = uvMid;
+			dNear  = dMid;
 		}
-
-		// Check for sign inversion.
-		if (yMid * yEnd < 0.0) {
-			UVStart = UVMid;
-			hStart = hMid;
-			yStart = yMid;
-		} else {
-			UVEnd = UVMid;
-			hEnd = hMid;
-			yEnd = yMid;
+		else {
+			uvFar = uvMid;
+			dFar  = dMid;
 		}
-
 	}
-	
-	return UVMid;
+
+	/* 5) Final UV: midpoint of last interval ------------------------------ */
+	return mix(uvNear, uvFar, 0.5);
 }
+
 
 material_property unpack(vec2 aUV) {
 	material_property MaterialProperty;
@@ -337,8 +320,15 @@ void main() {
 	// Columns are: [Tangent, Bitangent, Normal]
 	mat3 TBN = mat3(t, b, n);
 
-	// Calculate aUV coordinates after applying the height map.
-	vec2 aUV = TextureCoordinate.xy; //bisection_parallax(TextureCoordinate.xy, TBN);
+	// Calculate aUV coordinates after applying parallax mapping with height map.
+	vec2 aUV;
+	if (Material.HeightTextureIndex > 0) {
+		// If height map is present, use parallax mapping.
+		aUV = bisection_parallax(TextureCoordinate.xy, TBN);
+	}
+	else {
+		aUV = TextureCoordinate.xy;
+	}
 
 	// Load Material Propertie for fragment.
 	material_property MP = unpack(aUV);
