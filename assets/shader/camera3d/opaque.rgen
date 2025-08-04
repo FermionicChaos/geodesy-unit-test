@@ -271,7 +271,8 @@ vec3 lighting_and_shadows(
 			vec3 kS = vec3(fresnel_schlick(max(dot(HalfVector, aViewDirection), 0.0), F0.r));
 			vec3 kD = (vec3(1.0) - kS) * (1.0 - aMetallic); // Metallic surfaces have no diffuse
 
-			LightContribution = (kD*Diffuse + kS*Specular) * aLight.Color * Attenuation;
+			// Apply AO to the final combined result for indirect/bounce lighting approximation
+			LightContribution = (kD*Diffuse + kS*Specular) * aLight.Color * Attenuation * mix(1.0, aAmbientOcclusion, 0.3);
 		}
 		break;
 	case POINT: 
@@ -329,7 +330,8 @@ vec3 lighting_and_shadows(
 			vec3 kS = vec3(fresnel_schlick(max(dot(HalfVector, aViewDirection), 0.0), F0.r));
 			vec3 kD = (vec3(1.0) - kS) * (1.0 - aMetallic); // Metallic surfaces have no diffuse
 
-			LightContribution = (kD*Diffuse + kS*Specular) * aLight.Color * Attenuation;
+			// Apply AO to the final combined result for indirect/bounce lighting approximation
+			LightContribution = (kD*Diffuse + kS*Specular) * aLight.Color * Attenuation * mix(1.0, aAmbientOcclusion, 0.3);
 		}
 		break;
 	default:
