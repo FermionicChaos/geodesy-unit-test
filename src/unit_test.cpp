@@ -518,7 +518,7 @@ namespace geodesy::bltn {
 		runtime::object::creator DamagedHelmet;
 		DamagedHelmet.Name 					= "DamagedHelmet";
 		DamagedHelmet.ModelPath 			= "dep/gltf-models/2.0/DamagedHelmet/glTF/DamagedHelmet.gltf";
-		DamagedHelmet.Position 				= { 8.0f, 0.0f, 0.0f };
+		DamagedHelmet.Position 				= { 2.0f, -4.0f, 1.0f };
 		DamagedHelmet.Direction 			= { -180.0f, 0.0f };
 		DamagedHelmet.Scale 				= { 1.0f, 1.0f, 1.0f };
 		Scene3DCreationList.push_back(&DamagedHelmet);
@@ -528,7 +528,7 @@ namespace geodesy::bltn {
 		runtime::object::creator IridescenceLamp;
 		IridescenceLamp.Name 				= "IridescenceLamp";
 		IridescenceLamp.ModelPath 			= "dep/gltf-models/2.0/IridescenceLamp/glTF/IridescenceLamp.gltf";
-		IridescenceLamp.Position 			= { 0.0f, -10.0f, 0.0f };
+		IridescenceLamp.Position 			= { 0.0f, -5.0f, 0.0f };
 		IridescenceLamp.Direction 			= { -90.0f, 0.0f };
 		IridescenceLamp.Scale 				= { 2.0f, 2.0f, 2.0f };
 		Scene3DCreationList.push_back(&IridescenceLamp);
@@ -536,7 +536,7 @@ namespace geodesy::bltn {
 		runtime::object::creator MosquitoInAmber;
 		MosquitoInAmber.Name 				= "MosquitoInAmber";
 		MosquitoInAmber.ModelPath 			= "dep/gltf-models/2.0/MosquitoInAmber/glTF/MosquitoInAmber.gltf";
-		MosquitoInAmber.Position 			= { -10.0f, 0.0f, 0.0f };
+		MosquitoInAmber.Position 			= { 4.0f, -5.0f, 0.0f };
 		MosquitoInAmber.Direction 			= { 0.0f, 0.0f };
 		MosquitoInAmber.Scale 				= { 10.0f, 10.0f, 10.0f };
 		Scene3DCreationList.push_back(&MosquitoInAmber);
@@ -575,30 +575,30 @@ namespace geodesy::bltn {
 		
 		// Ambient light.
 		LightBuffer->Source[0].Type 			= gfx::model::light::type::AMBIENT;
-		LightBuffer->Source[0].Intensity 		= 0.0f;
+		LightBuffer->Source[0].Intensity 		= 0.2f;
 		LightBuffer->Source[0].Color 			= { 1.0f, 1.0f, 1.0f };
 
 		// Direction light.
 		LightBuffer->Source[1].Type 			= gfx::model::light::type::DIRECTIONAL;
-		LightBuffer->Source[1].Intensity 		= 0.0f;
+		LightBuffer->Source[1].Intensity 		= 0.8f;
 		LightBuffer->Source[1].Color 			= { 1.0f, 1.0f, 1.0f };
 		LightBuffer->Source[1].Direction 		= { -1.0f, -1.0f, -1.0f };
 
 		// Point light.
 		LightBuffer->Source[2].Type 			= gfx::model::light::type::POINT;
-		LightBuffer->Source[2].Intensity 		= 10.0f;
+		LightBuffer->Source[2].Intensity 		= 2.0f;
 		LightBuffer->Source[2].Color 			= { 1.0f, 1.0f, 0.0f };
 		LightBuffer->Source[2].Position 		= { -5.0f, -2.0f, 3.0f };
 
 		// Point Light.
 		LightBuffer->Source[3].Type 			= gfx::model::light::type::POINT;
-		LightBuffer->Source[3].Intensity 		= 10.0f;
+		LightBuffer->Source[3].Intensity 		= 3.0f;
 		LightBuffer->Source[3].Color 			= { 0.0f, 1.0f, 1.0f };
 		LightBuffer->Source[3].Position 		= { 5.0f, -2.0f, 3.0f };
 
 		// Point Light.
 		LightBuffer->Source[4].Type 			= gfx::model::light::type::POINT;
-		LightBuffer->Source[4].Intensity 		= 10.0f;
+		LightBuffer->Source[4].Intensity 		= 4.0f;
 		LightBuffer->Source[4].Color 			= { 1.0f, 0.0f, 1.0f };
 		LightBuffer->Source[4].Position 		= { 0.0f, 5.0f, 3.0f };
 
