@@ -575,7 +575,7 @@ namespace geodesy::bltn {
 		
 		// Ambient light.
 		LightBuffer->Source[0].Type 			= gfx::model::light::type::AMBIENT;
-		LightBuffer->Source[0].Intensity 		= 1.0f;
+		LightBuffer->Source[0].Intensity 		= 0.0f;
 		LightBuffer->Source[0].Color 			= { 1.0f, 1.0f, 1.0f };
 
 		// Direction light.
