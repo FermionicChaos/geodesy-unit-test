@@ -575,12 +575,12 @@ namespace geodesy::bltn {
 		
 		// Ambient light.
 		LightBuffer->Source[0].Type 			= gfx::model::light::type::AMBIENT;
-		LightBuffer->Source[0].Intensity 		= 0.0f;
+		LightBuffer->Source[0].Intensity 		= 0.2f;
 		LightBuffer->Source[0].Color 			= { 1.0f, 1.0f, 1.0f };
 
 		// Direction light.
 		LightBuffer->Source[1].Type 			= gfx::model::light::type::DIRECTIONAL;
-		LightBuffer->Source[1].Intensity 		= 0.0f;
+		LightBuffer->Source[1].Intensity 		= 0.8f;
 		LightBuffer->Source[1].Color 			= { 1.0f, 1.0f, 1.0f };
 		LightBuffer->Source[1].Direction 		= { -1.0f, -1.0f, -1.0f };
 
@@ -614,8 +614,10 @@ namespace geodesy::bltn {
 		SystemWindowCreator.FrameCount 		= 3;
 		SystemWindowCreator.FrameRate 		= 60.0f;
 		SystemWindowCreator.Display 		= Engine->PrimaryDisplay;
-		// SystemWindowCreator.PixelFormat 	= image::format::A2B10G10R10_UNORM_PACK32;
-		// SystemWindowCreator.ColorSpace 		= obj::system_window::swapchain::colorspace::HDR10_ST2084;
+// #ifdef GEODESY_SYSTEM_WINDOWS
+// 		SystemWindowCreator.PixelFormat 	= image::format::A2B10G10R10_UNORM_PACK32;
+// 		SystemWindowCreator.ColorSpace 		= obj::system_window::swapchain::colorspace::HDR10_ST2084;
+// #endif
 		CanvasCreationList.push_back(&SystemWindowCreator);
 
 		// Use subject window to share camera3d renderings.
