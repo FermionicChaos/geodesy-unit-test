@@ -36,6 +36,8 @@ namespace geodesy::bltn {
 		std::set<std::string> ExtensionList = {};
 		// Add system window extensions for desktop rendering. (DESKTOP DEPENDENT)
 		ExtensionList.insert(system_window::ContextExtensionsModule.begin(), system_window::ContextExtensionsModule.end());
+		// Add OpenXR extensions to the device context. (XR DEPENDENT)
+		ExtensionList.insert(cameravr::ContextExtensionsModule.begin(), cameravr::ContextExtensionsModule.end());
 		// Add ray tracing extensions to the device context. (HARDWARE DEPENDENT)
 		// TODO: Check if ray tracing is supported by the device. Disabled for now.
 		ExtensionList.insert(context::RayTracingExtensions.begin(), context::RayTracingExtensions.end());

@@ -78,6 +78,8 @@ int main(int aCmdArgCount, char* aCmdArgList[]) {
 	ExtensionList.insert(engine::EngineExtensionsModule.begin(), engine::EngineExtensionsModule.end());
 	// Insert System window extensions into the extension list.
 	ExtensionList.insert(system_window::EngineExtensionsModule.begin(), system_window::EngineExtensionsModule.end());
+	// Load in XR Extensions.
+	ExtensionList.insert(cameravr::EngineExtensionsModule.begin(), cameravr::EngineExtensionsModule.end());
 
 	try {
 		geodesy::engine Engine(CommandLineArguments, LayerList, ExtensionList);
