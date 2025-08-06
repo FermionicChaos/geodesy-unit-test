@@ -393,6 +393,11 @@ namespace geodesy::bltn {
 		CameraCreateInfo.Far 				= 2000.0f;
 		Scene3DCreationList.push_back(&CameraCreateInfo);
 
+		// Add CameraVR
+		obj::cameravr::creator CameraVR;
+		// No options yet...
+		Scene3DCreationList.push_back(&CameraVR);
+
 		runtime::object::creator Sponza;
 		Sponza.Name 						= "Sponza";
 		Sponza.ModelPath 					= "dep/gltf-models/2.0/Sponza/glTF/Sponza.gltf";
