@@ -50,58 +50,13 @@ namespace geodesy::bltn {
 
 	}
 
-	void unit_test::run() {
-		VkResult Result = VK_SUCCESS;
-		std::cout << "Thread Count: " << omp_get_max_threads() << std::endl;
-		omp_set_num_threads(omp_get_max_threads());
+	void unit_test::initialize() {
+
+		app::initialize();
 
 		this->math_test();
 
 		this->create_worlds();
-
-		timer PerformanceTimer(1.0);
-
-		// Start main loop.
-		float t = 0.0f;
-		while (Engine->ThreadController.cycle(TimeStep)) {
-			t += Engine->ThreadController.total_time() * 100.0f;
-
-			double t1 = timer::get_time();
-
-			system_window::poll_input();
-
-			double t2 = timer::get_time();
-
-			// Update host resources.
-			this->update(Engine->ThreadController.total_time());
-
-			double t3 = timer::get_time();
-
-			// Execute gpu workloads.
-			Result = Engine->execute_render_operations(this);
-
-			double t4 = timer::get_time();
-
-			if (PerformanceTimer.check()) {
-				std::cout << "----- Performance Metrics -----" << std::endl;
-				std::cout << "Current Time:\t" << timer::get_time() << " s" << std::endl;
-				std::cout << "Time Step:\t" << TimeStep * 1000 << " ms" << std::endl;
-				std::cout << "Work Time:\t" << (t4 - t1) * 1000.0 << " ms" << std::endl;
-				std::cout << "-Input Time:\t" << (t2 - t1) * 1000.0 << " ms" << std::endl;
-				std::cout << "-Update Time:\t" << (t3 - t2) * 1000.0 << " ms" << std::endl;
-				std::cout << "-Render Time:\t" << (t4 - t3) * 1000.0 << " ms" << std::endl;
-				std::cout << "Halt Time:\t" << Engine->ThreadController.halt_time() * 1000.0 << " ms" << std::endl;
-				std::cout << "Total Time:\t" << Engine->ThreadController.total_time() * 1000.0 << " ms" << std::endl << std::endl;
-				//std::cout << "Thread Over Time: " << Engine->ThreadController.work_time() - TimeStep << std::endl;
-			}
-
-			// if (timer::get_time() > 30.0f) {
-			// 	break;
-			// }
-
-		}
-
-		lgc::timer::wait(5.0f);
 
 	}
 

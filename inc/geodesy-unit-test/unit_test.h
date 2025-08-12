@@ -16,7 +16,7 @@ namespace geodesy::bltn {
 		unit_test(engine* aEngine);
 		~unit_test();
 
-		void run() override;
+		void initialize() override;
 
 		void math_test();
 		void create_worlds();

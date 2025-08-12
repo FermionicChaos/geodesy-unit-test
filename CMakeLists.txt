@@ -17,7 +17,7 @@ set(DEP_SOURCE_DIR "${CMAKE_SOURCE_DIR}/dep")
 FetchContent_Declare(
     geodesy
     GIT_REPOSITORY      https://github.com/FermionicChaos/geodesy.git
-    GIT_TAG             rt2
+    GIT_TAG             vr-development
     SOURCE_DIR          ${DEP_SOURCE_DIR}/geodesy-src
 )
 FetchContent_MakeAvailable(geodesy)
