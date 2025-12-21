@@ -7,56 +7,43 @@
 #include <algorithm>
 #include <complex>
 
-namespace geodesy::bltn {
+namespace geodesy {
 
-	using namespace core;
 	using namespace runtime;
 
 	using namespace gpu;
-	using namespace obj;
-	using namespace lgc;
 
-	unit_test::unit_test(engine* aEngine) : runtime::app(aEngine, "geodesy-unit-test", { 1, 0, 0 }) {
-		TimeStep = 1.0 / 2000.0;
-		Window = nullptr;
+	unit_test::unit_test(engine* aEngine) {
+		// TimeStep = 1.0 / 2000.0;
+		// Window = nullptr;
 
-		// I want my device context to support these operation types.
-		std::vector<uint> OperationList = {
-			device::operation::TRANSFER,
-			device::operation::TRANSFER_AND_COMPUTE,
-			device::operation::GRAPHICS_AND_COMPUTE,
-			device::operation::PRESENT
-		};
+		// // I want my device context to support these operation types.
+		// std::vector<uint> OperationList = {
+		// 	device::operation::TRANSFER,
+		// 	device::operation::TRANSFER_AND_COMPUTE,
+		// 	device::operation::GRAPHICS_AND_COMPUTE,
+		// 	device::operation::PRESENT
+		// };
 		
-		// ===== Load Context Layers ===== //
-		std::set<std::string> LayerList = {};
-		// I want my device context to be able to render to system windows.
+		// // ===== Load Context Layers ===== //
+		// std::set<std::string> LayerList = {};
+		// // I want my device context to be able to render to system windows.
 
-		// ===== Load Context Extensions ===== //
-		std::set<std::string> ExtensionList = {};
-		// Add system window extensions for desktop rendering. (DESKTOP DEPENDENT)
-		ExtensionList.insert(system_window::ContextExtensionsModule.begin(), system_window::ContextExtensionsModule.end());
-		// Add OpenXR extensions to the device context. (XR DEPENDENT)
-		ExtensionList.insert(cameravr::ContextExtensionsModule.begin(), cameravr::ContextExtensionsModule.end());
-		// Add ray tracing extensions to the device context. (HARDWARE DEPENDENT)
-		// TODO: Check if ray tracing is supported by the device. Disabled for now.
-		ExtensionList.insert(context::RayTracingExtensions.begin(), context::RayTracingExtensions.end());
+		// // ===== Load Context Extensions ===== //
+		// std::set<std::string> ExtensionList = {};
+		// // Add system window extensions for desktop rendering. (DESKTOP DEPENDENT)
+		// ExtensionList.insert(system_window::ContextExtensionsModule.begin(), system_window::ContextExtensionsModule.end());
+		// // Add OpenXR extensions to the device context. (XR DEPENDENT)
+		// ExtensionList.insert(cameravr::ContextExtensionsModule.begin(), cameravr::ContextExtensionsModule.end());
+		// // Add ray tracing extensions to the device context. (HARDWARE DEPENDENT)
+		// // TODO: Check if ray tracing is supported by the device. Disabled for now.
+		// ExtensionList.insert(context::RayTracingExtensions.begin(), context::RayTracingExtensions.end());
 
-		// Engine create device context for gpu operations.
-		DeviceContext = Engine->create_device_context(Engine->PrimaryDevice, OperationList, LayerList, ExtensionList);
+		// // Engine create device context for gpu operations.
+		// DeviceContext = Engine->create_device_context(Engine->PrimaryDevice, OperationList, LayerList, ExtensionList);
 	}
 
 	unit_test::~unit_test() {
-
-	}
-
-	void unit_test::initialize() {
-
-		app::initialize();
-
-		this->math_test();
-
-		this->create_worlds();
 
 	}
 
@@ -328,7 +315,8 @@ namespace geodesy::bltn {
 	}
 
 	void unit_test::create_worlds() {
-
+		/*
+		
 		// These are creation lists for construction stages.
 		std::vector<runtime::object::creator*> Scene3DCreationList;
 		std::vector<runtime::object::creator*> CanvasCreationList;
@@ -603,6 +591,7 @@ namespace geodesy::bltn {
 		Window = std::dynamic_pointer_cast<obj::system_window>(this->Stage[1]->Object[0]);
 		// Forward Window User Input to Camera3D.
 		Window->InputTarget = Camera3D;
+		*/
 
 	}
 

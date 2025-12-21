@@ -49,7 +49,7 @@ function(fetch_dependency ADEP_NAME AGIT_REPO AGIT_TAG)
 endfunction()
 
 # Include Geodesy Engine dependency
-fetch_dependency(geodesy-engine https://github.com/FermionicChaos/geodesy-engine.git master VULKAN_SDK_STATIC_LIB=ON VULKAN_SDK_VERSION=1.4.321.0)
+fetch_dependency(geodesy-engine https://github.com/FermionicChaos/geodesy-engine.git restart VULKAN_SDK_STATIC_LIB=ON VULKAN_SDK_VERSION=1.4.321.0)
 
 # ----------------------- Geodesy Unit Test ----------------------- #
 # When creating your own project off of the Geodesy Library, use this
