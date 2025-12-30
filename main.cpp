@@ -12,13 +12,13 @@ int main(int aCmdArgCount, char* aCmdArgList[]) {
 	// Initialize all third party libraries.
 	if (!geodesy::engine::initialize()) return -1;
 
-	std::vector<const char*> CommandLineArguments(aCmdArgCount);
+	std::set<std::string> CommandLineArguments;
 	for (int i = 0; i < aCmdArgCount; i++) {
-		CommandLineArguments[i] = aCmdArgList[i];
+		CommandLineArguments.insert(aCmdArgList[i]);
 	}
 
-	for (size_t i = 0; i < CommandLineArguments.size(); i++) {
-		std::cout << "CommandLineArg[" << i << "] = " << CommandLineArguments[i] << std::endl;
+	for (const auto& Argument : CommandLineArguments) {
+		std::cout << "CommandLineArg = " << Argument << std::endl;
 	}
 
 	// ===== Load Engine Layers ===== //
