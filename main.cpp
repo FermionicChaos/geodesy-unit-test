@@ -45,7 +45,7 @@ int main(int aCmdArgCount, char* aCmdArgList[]) {
 			geodesy::unit_test UnitTest(&Engine);
 
 			// Run User App
-			// Engine.run(&UnitTest);
+			Engine.run(&UnitTest);
 		}
 	}
 	catch (const std::exception& e) {

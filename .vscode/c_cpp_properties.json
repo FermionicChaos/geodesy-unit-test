@@ -34,6 +34,7 @@
                 "${workspaceFolder}/inc/",
                 "${workspaceFolder}/dep/",
                 "${workspaceFolder}/dep/geodesy-io/inc/",
+                "${workspaceFolder}/dep/geodesy-logic/inc/",
                 "${workspaceFolder}/dep/geodesy-math/inc/",
                 "${workspaceFolder}/dep/geodesy-physics/inc/",
                 "${workspaceFolder}/dep/geodesy-gpu/inc/",
