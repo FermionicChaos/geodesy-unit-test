@@ -1,0 +1,56 @@
+# This is a sample material file used by the engine.
+# VertexWeight + TextureWeight + ValueWeight = 1.0 (per property)
+
+Material:
+  Name: "Example"
+  Transparency: "Opaque" # Opaque | Cutout | Blend (engine-defined)
+  Albedo:
+    VertexWeight: 0.0
+    TextureWeight: 1.0
+    TexturePath: "textures/example_albedo.png"
+    ValueWeight: 0.0
+    Value: [1.0, 1.0, 1.0, 1.0] # RGBA (if engine uses vec3, alpha can be driven by Opacity)
+  Opacity:
+    TextureWeight: 1.0
+    TexturePath: "textures/example_opacity.png"
+    ValueWeight: 0.0
+    Value: 1.0
+  Normal:
+    VertexWeight: 0.0
+    TextureWeight: 1.0
+    TexturePath: "textures/example_normal.png"
+  Height:
+    TexturePath: "textures/example_height.png"
+    Scale: 0.02
+    StepCount: 32
+  Emissive:
+    VertexWeight: 0.0
+    TextureWeight: 1.0
+    TexturePath: "images/emissive.png"
+    ValueWeight: 0.0
+    Value: [0.0, 0.0, 0.0]
+  AmbientOcclusion:
+    VertexWeight: 0.0
+    TextureWeight: 0.0
+    TexturePath: ""
+    ValueWeight: 1.0
+    Value: 1.0
+  Roughness:
+    VertexWeight: 0.0
+    TextureWeight: 0.0
+    TexturePath: ""
+    ValueWeight: 1.0
+    Value: 0.5
+  Metallic:
+    VertexWeight: 0.0
+    TextureWeight: 0.0
+    TexturePath: ""
+    ValueWeight: 1.0
+    Value: 0.0
+  IOR:
+    VertexWeight: 0.0
+    TextureWeight: 0.0
+    TexturePath: ""
+    ValueWeight: 1.0
+    Value: 1.5
+

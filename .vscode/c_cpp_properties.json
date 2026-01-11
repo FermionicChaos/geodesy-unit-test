@@ -6,6 +6,8 @@
                 "C:/Program Files/VulkanSDK/Include",
                 "${workspaceFolder}/inc/",
                 "${workspaceFolder}/dep/",
+                "${workspaceFolder}/dep/lua/",
+                "${workspaceFolder}/dep/yaml-cpp/include/",
                 "${workspaceFolder}/dep/geodesy-src/inc/",
                 "${workspaceFolder}/dep/glfw-src/include/",
                 "${workspaceFolder}/dep/openxr-src/include/",
@@ -15,7 +17,8 @@
                 "${workspaceFolder}/dep/imgui-src/",
                 "${workspaceFolder}/prj/_deps/glfw-build/src/",
                 "${workspaceFolder}/prj/_deps/assimp-build/include/",
-                "${workspaceFolder}/prj/_deps/freetype-build/include/"
+                "${workspaceFolder}/prj/_deps/freetype-build/include/",
+                "${workspaceFolder}/prj/_deps/yaml-cpp-build/include/"
             ],
             "defines": [
                 "_DEBUG",
@@ -33,6 +36,8 @@
             "includePath": [
                 "${workspaceFolder}/inc/",
                 "${workspaceFolder}/dep/",
+                "${workspaceFolder}/dep/lua/",
+                "${workspaceFolder}/dep/yaml-cpp/include/",
                 "${workspaceFolder}/dep/geodesy-io/inc/",
                 "${workspaceFolder}/dep/geodesy-logic/inc/",
                 "${workspaceFolder}/dep/geodesy-math/inc/",
@@ -48,7 +53,8 @@
                 // "${workspaceFolder}/dep/imgui/",
                 // "${workspaceFolder}/prj/Debug/_deps/glfw-build/src/",
                 "${workspaceFolder}/prj/Debug/_deps/assimp-build/include/",
-                "${workspaceFolder}/prj/Debug/_deps/freetype-build/include/"
+                "${workspaceFolder}/prj/Debug/_deps/freetype-build/include/",
+                "${workspaceFolder}/prj/Debug/_deps/yaml-cpp-build/include/"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",
