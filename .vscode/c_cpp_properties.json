@@ -45,7 +45,7 @@
                 "${workspaceFolder}/dep/geodesy-gpu/inc/",
                 "${workspaceFolder}/dep/geodesy-graphics/inc/",
                 "${workspaceFolder}/dep/geodesy-engine/inc/",
-                // "${workspaceFolder}/dep/glfw/include/",
+                "${workspaceFolder}/dep/glfw/include/",
                 "${workspaceFolder}/dep/glslang/",
                 "${workspaceFolder}/dep/assimp/include/",
                 "${workspaceFolder}/dep/freetype/include/",

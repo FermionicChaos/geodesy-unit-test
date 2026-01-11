@@ -3,6 +3,9 @@
 // Includes core engine, and base types.
 #include <geodesy/engine.h>
 
+// Builtin Components
+#include <geodesy/builtin.h>
+
 // Include Unit Test
 #include <geodesy-unit-test/unit_test.h>
 
