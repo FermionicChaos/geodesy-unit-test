@@ -1,0 +1,29 @@
+# Geodesy Engine Configuration File
+# This file controls the entire application startup and configuration
+
+Engine:
+  Name: "Geodesy Unit Test"
+  Version: [1, 0, 0]
+  ExecutionRate: 60 # [Hz]
+  SplitRenderThread: false
+
+# Worlds - Scene/level definitions
+# Each world is loaded from a separate YAML file and assigned to a GPU context
+Worlds:
+  - Name: "MainMenu"
+    ConfigFile: "assets/worlds/main_menu.yaml"
+    AutoLoad: false  # Don't load on startup
+    
+  - Name: "Level01"
+    ConfigFile: "assets/worlds/level_01.yaml"
+    AutoLoad: true  # Load immediately on startup
+
+  - Name: "First Person Overlay GUI"
+    ConfigFile: "assets/worlds/first_person_overlay_gui.yaml"
+    AutoLoad: true  # Load immediately on startup
+  
+  # Example: Multi-GPU setup with different worlds on different GPUs
+  # - Name: "Level02"
+  #   ConfigFile: "assets/worlds/level_02.yaml"
+  #   ContextName: "ComputeContext"
+  #   AutoLoad: false

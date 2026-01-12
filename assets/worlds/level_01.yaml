@@ -1,0 +1,127 @@
+# World Scene Configuration - Level 01
+# This file defines all objects, lighting, and physics for a single world
+# It is device-agnostic - GPU selection is done in the root config.yaml
+
+World:
+  Name: "Level01"
+  # Physics configuration
+  Physics:
+    Gravity: [0.0, 0.0, -9.81]
+    TimeStep: 0.016667  # 60 FPS
+    VelocityIterations: 8
+    PositionIterations: 3
+  Objects:
+    - Name: "Camera3D"
+      Type: "camera3d"
+      ModelPath: "dep/gltf-models/2.0/Camera/glTF/Camera.gltf"
+      Position: [0.0, -5.0, 2.0]
+      Direction: [0.0, 0.0]
+      Scale: [1.0, 1.0, 1.0]
+      # Subject Settings
+      Resolution: [1920, 1080]
+      FrameRate: 60.0
+      FrameCount: 3
+      # Camera-specific properties
+      FOV: 70.0
+      Near: 1.0
+      Far: 2000.0
+    # Large scene model
+    - Name: "Sponza"
+      Type: "object"
+      ModelPath: "dep/gltf-models/2.0/Sponza/glTF/Sponza.gltf"
+      Position: [0.0, 0.0, 0.0]
+      Direction: [-90.0, 90.0]
+      Scale: [0.03, 0.03, 0.03]
+    # Simple Boxes
+    - Name: "Box"
+      Type: "object"
+      ModelPath: "dep/gltf-models/2.0/Box/glTF/Box.gltf"
+      Position: [0.0, 0.0, 0.0]
+      Direction: [0.0, 0.0]
+      Scale: [1.0, 1.0, 1.0]
+    - Name: "BoxTextured"
+      Type: "object"
+      ModelPath: "dep/gltf-models/2.0/BoxTextured/glTF/BoxTextured.gltf"
+      Position: [2.0, 0.0, 0.0]
+      Direction: [0.0, 0.0]
+      Scale: [1.0, 1.0, 1.0]
+    - Name: "BoxTextured2"
+      Type: "object"
+      ModelPath: "dep/gltf-models/2.0/BoxTextured/glTF/BoxTextured.gltf"
+      Position: [4.0, 0.0, 0.0]
+      Direction: [0.0, 0.0]
+      Scale: [1.0, 1.0, 1.0]
+    - Name: "Cube"
+      Type: "object"
+      ModelPath: "dep/gltf-models/2.0/Cube/glTF/Cube.gltf"
+      Position: [0.0, 2.0, 0.0]
+      Direction: [0.0, 0.0]
+      Scale: [0.5, 0.5, 0.5]
+    - Name: "Cube2"
+      Type: "object"
+      ModelPath: "dep/gltf-models/2.0/Cube/glTF/Cube.gltf"
+      Position: [0.0, 4.0, 0.0]
+      Direction: [0.0, 0.0]
+      Scale: [0.5, 0.5, 0.5]
+    - Name: "BoxWithVertexColors"
+      Type: "object"
+      ModelPath: "dep/gltf-models/2.0/BoxTextured/glTF/BoxTextured.gltf"
+      Position: [0.0, 0.0, 2.0]
+      Direction: [0.0, 0.0]
+      Scale: [1.0, 1.0, 1.0]
+    # Gizmo Object
+    - Name: "Gizmo"
+      Type: "object"
+      ModelPath: "assets/models/gizmo/scene.gltf"
+      Position: [0.0, 0.0, 0.0]
+      Direction: [0.0, 0.0]
+      Scale: [1.0, 1.0, 1.0]
+    # Complex Animations
+    - Name: "BrainStem"
+      Type: "object"
+      ModelPath: "dep/gltf-models/2.0/BrainStem/glTF/BrainStem.gltf"
+      Position: [2.0, -2.0, 0.0]
+      Direction: [0.0, 0.0]
+      Scale: [1.0, 1.0, 1.0]
+      AnimationWeights: [0.0, 1.0]
+    - Name: "CesiumMilkTruck"
+      Type: "object"
+      ModelPath: "dep/gltf-models/2.0/CesiumMilkTruck/glTF/CesiumMilkTruck.gltf"
+      Position: [0.0, 12.0, 0.0]
+      Direction: [-180.0, 0.0]
+      Scale: [1.0, 1.0, 1.0]
+      AnimationWeights: [0.0, 1.0]
+    - Name: "CesiumMan"
+      Type: "object"
+      ModelPath: "dep/gltf-models/2.0/CesiumMan/glTF/CesiumMan.gltf"
+      Position: [-2.0, -2.0, 0.0]
+      Direction: [0.0, 0.0]
+      Scale: [1.0, 1.0, 1.0]
+      AnimationWeights: [0.0, 1.0]
+    # Emissive Lighting
+    - Name: "Lantern"
+      Type: "object"
+      ModelPath: "dep/gltf-models/2.0/Lantern/glTF/Lantern.gltf"
+      Position: [0.0, -2.0, 0.0]
+      Direction: [-90.0, 0.0]
+      Scale: [0.2, 0.2, 0.2]
+    # PBR Test
+    - Name: "DamagedHelmet"
+      Type: "object"
+      ModelPath: "dep/gltf-models/2.0/DamagedHelmet/glTF/DamagedHelmet.gltf"
+      Position: [2.0, -4.0, 1.0]
+      Direction: [-180.0, 0.0]
+      Scale: [1.0, 1.0, 1.0]
+    # Special Case Objects
+    - Name: "IridescenceLamp"
+      Type: "object"
+      ModelPath: "dep/gltf-models/2.0/IridescenceLamp/glTF/IridescenceLamp.gltf"
+      Position: [0.0, -5.0, 0.0]
+      Direction: [-90.0, 0.0]
+      Scale: [2.0, 2.0, 2.0]
+    - Name: "MosquitoInAmber"
+      Type: "object"
+      ModelPath: "dep/gltf-models/2.0/MosquitoInAmber/glTF/MosquitoInAmber.gltf"
+      Position: [4.0, -5.0, 0.0]
+      Direction: [0.0, 0.0]
+      Scale: [10.0, 10.0, 10.0]
