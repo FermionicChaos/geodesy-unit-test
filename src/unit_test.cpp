@@ -13,24 +13,26 @@ namespace geodesy {
 
 	using namespace gpu;
 
-	unit_test::unit_test(engine* aEngine) {
+	unit_test::unit_test(engine* aEngine) : runtime::app() {
+		this->Name = "Geodesy Unit Test Application";
+		this->Version = { 1, 0, 0 };
 		// TimeStep = 1.0 / 2000.0;
 		// Window = nullptr;
 
-		// // I want my device context to support these operation types.
-		// std::vector<uint> OperationList = {
-		// 	device::operation::TRANSFER,
-		// 	device::operation::TRANSFER_AND_COMPUTE,
-		// 	device::operation::GRAPHICS_AND_COMPUTE,
-		// 	device::operation::PRESENT
-		// };
+		// I want my device context to support these operation types.
+		std::vector<uint> OperationList = {
+			device::operation::TRANSFER,
+			// device::operation::TRANSFER_AND_COMPUTE,
+			device::operation::GRAPHICS | device::operation::COMPUTE,
+			// device::operation::PRESENT
+		};
 		
-		// // ===== Load Context Layers ===== //
-		// std::set<std::string> LayerList = {};
-		// // I want my device context to be able to render to system windows.
+		// ===== Load Context Layers ===== //
+		std::set<std::string> LayerList = {};
+		// I want my device context to be able to render to system windows.
 
-		// // ===== Load Context Extensions ===== //
-		// std::set<std::string> ExtensionList = {};
+		// ===== Load Context Extensions ===== //
+		std::set<std::string> ExtensionList = {};
 		// // Add system window extensions for desktop rendering. (DESKTOP DEPENDENT)
 		// ExtensionList.insert(system_window::ContextExtensionsModule.begin(), system_window::ContextExtensionsModule.end());
 		// // Add OpenXR extensions to the device context. (XR DEPENDENT)
@@ -39,8 +41,8 @@ namespace geodesy {
 		// // TODO: Check if ray tracing is supported by the device. Disabled for now.
 		// ExtensionList.insert(context::RayTracingExtensions.begin(), context::RayTracingExtensions.end());
 
-		// // Engine create device context for gpu operations.
-		// DeviceContext = Engine->create_device_context(Engine->PrimaryDevice, OperationList, LayerList, ExtensionList);
+		// Engine create device context for gpu operations.
+		Context = aEngine->Instance->create_context(aEngine->PrimaryDevice, OperationList, LayerList, ExtensionList);
 	}
 
 	unit_test::~unit_test() {

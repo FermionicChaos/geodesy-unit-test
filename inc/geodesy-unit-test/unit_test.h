@@ -9,6 +9,8 @@ namespace geodesy {
 	class unit_test : public runtime::app {
 	public:
 
+		std::shared_ptr<gpu::context> Context;
+
 		unit_test(engine* aEngine);
 		~unit_test();
 
