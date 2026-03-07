@@ -9,8 +9,14 @@ namespace geodesy {
 	class unit_test : public runtime::app {
 	public:
 
+		// Engine Pre-Initialization phase.
+		static engine::config initialize(std::set<std::string> aCommandLineArguments);
+		static void terminate();
+
+		// Application Data
 		std::shared_ptr<gpu::context> Context;
 
+		// Application Initialization.
 		unit_test(engine* aEngine);
 		~unit_test();
 
@@ -21,4 +27,4 @@ namespace geodesy {
 
 }
 
-#endif // GEODESY_BLTN_APP_UNIT_TEST_H
+#endif // GEODESY_UNIT_TEST_H

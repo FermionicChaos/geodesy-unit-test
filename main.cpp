@@ -6,43 +6,27 @@
 // Builtin Components
 #include <geodesy/builtin.h>
 
-// Include Unit Test
+// Example Application - Unit Test
 #include <geodesy-unit-test/unit_test.h>
 
 // Using entry point for app.
 int main(int aCmdArgCount, char* aCmdArgList[]) {
 
-	// Initialize all third party libraries.
-	if (!geodesy::engine::initialize()) return -1;
-
+	// Process command line arguments into a set for easy lookup.
 	std::set<std::string> CommandLineArguments;
 	for (int i = 0; i < aCmdArgCount; i++) {
 		CommandLineArguments.insert(aCmdArgList[i]);
 	}
 
-	for (const auto& Argument : CommandLineArguments) {
-		std::cout << "CommandLineArg = " << Argument << std::endl;
-	}
+	// Pre-Initialization phase, used for setting up engine configuration before the engine is initialized.
+	geodesy::engine::config EngineConfig = geodesy::unit_test::initialize(CommandLineArguments);
 
-	// ===== Load Engine Layers ===== //
-	std::set<std::string> LayerList = {};
-	// Insert engine layers into the layer list.
-	LayerList.insert(geodesy::engine::EngineLayersModule.begin(), geodesy::engine::EngineLayersModule.end());
-	// Insert System window layers into the layer list.
-	// LayerList.insert(system_window::EngineLayersModule.begin(), system_window::EngineLayersModule.end());
-
-	// ===== Load Engine Extensions ===== //
-	std::set<std::string> ExtensionList = {};
-	// Insert engine extensions into the extension list.
-	ExtensionList.insert(geodesy::engine::EngineExtensionsModule.begin(), geodesy::engine::EngineExtensionsModule.end());
-	// Insert System window extensions into the extension list.
-	// ExtensionList.insert(system_window::EngineExtensionsModule.begin(), system_window::EngineExtensionsModule.end());
-	// Load in XR Extensions.
-	// ExtensionList.insert(cameravr::EngineExtensionsModule.begin(), cameravr::EngineExtensionsModule.end());
+	// Initialize all third party libraries needed by the engine.
+	if (!geodesy::engine::initialize()) return -1;
 
 	try {
 		// Initialize Engine
-		geodesy::engine Engine(CommandLineArguments, LayerList, ExtensionList);
+		geodesy::engine Engine(CommandLineArguments, EngineConfig);
 		{
 			// Initialize User App
 			geodesy::unit_test UnitTest(&Engine);

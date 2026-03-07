@@ -13,9 +13,47 @@ namespace geodesy {
 
 	using namespace gpu;
 
+	// Engine Pre-Initialization phase.
+	engine::config unit_test::initialize(std::set<std::string> aCommandLineArguments) {
+		engine::config EngineConfiguration;
+
+		// Use SDK function loader
+		EngineConfiguration.VulkanGetInstanceProcAddr = (void*)vkGetInstanceProcAddr;
+		EngineConfiguration.VulkanAPISelection = { 1, 3, 0 };
+
+		// ===== Load Engine Layers ===== //
+		std::set<std::string> LayerList = {};
+		// Insert engine layers into the layer list.
+		LayerList.insert(geodesy::engine::EngineLayersModule.begin(), geodesy::engine::EngineLayersModule.end());
+		// Insert System window layers into the layer list.
+		// LayerList.insert(system_window::EngineLayersModule.begin(), system_window::EngineLayersModule.end());
+
+		// ===== Load Engine Extensions ===== //
+		std::set<std::string> ExtensionList = {};
+		// Insert engine extensions into the extension list.
+		ExtensionList.insert(geodesy::engine::EngineExtensionsModule.begin(), geodesy::engine::EngineExtensionsModule.end());
+		// Insert System window extensions into the extension list.
+		// ExtensionList.insert(system_window::EngineExtensionsModule.begin(), system_window::EngineExtensionsModule.end());
+		// Load in XR Extensions.
+		// ExtensionList.insert(cameravr::EngineExtensionsModule.begin(), cameravr::EngineExtensionsModule.end());
+
+		// Load in layers & extensions.
+		EngineConfiguration.VulkanLayerList = LayerList;
+		EngineConfiguration.VulkanExtensionList = ExtensionList;
+
+		EngineConfiguration.UserApplicationName = GEODESY_UNIT_TEST_NAME;
+		EngineConfiguration.UserApplicationVersion = std::array<int, 3>{ GEODESY_UNIT_TEST_VERSION_MAJOR, GEODESY_UNIT_TEST_VERSION_MINOR, GEODESY_UNIT_TEST_VERSION_PATCH };
+
+		return EngineConfiguration;
+	}
+
+	void unit_test::terminate() {
+
+	}
+
 	unit_test::unit_test(engine* aEngine) : runtime::app() {
-		this->Name = "Geodesy Unit Test Application";
-		this->Version = { 1, 0, 0 };
+		this->Name = GEODESY_UNIT_TEST_NAME;
+		this->Version = geodesy::math::vec<unsigned int, 3>{ GEODESY_UNIT_TEST_VERSION_MAJOR, GEODESY_UNIT_TEST_VERSION_MINOR, GEODESY_UNIT_TEST_VERSION_PATCH };
 		// TimeStep = 1.0 / 2000.0;
 		// Window = nullptr;
 
